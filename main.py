@@ -80,5 +80,29 @@ def main():
     #show flagged email wordcloud to highlight differences in word corpus
     plot_word_cloud(balanced_data[balanced_data['label'] == 'ham'], classifier='Non-Spam')
     plot_word_cloud(balanced_data[balanced_data['label'] == 'spam'], classifier='Spam')
+
+    #create train and test split
+    train_x, test_x, train_y, test_y = train_test_split(
+        balanced_data['text'],
+        balanced_data['label'], 
+        test_size=0.2,
+        random_state=random.randint(1,1000)
+    )
+
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(train_x)
+
+    train_sequences = tokenizer.texts_to_sequences(train_x)
+    test_sequences = tokenizer.texts_to_sequences(test_x)
+
+    #Padding sequence sentences to 100 characters
+    train_sequences = pad_sequences(train_sequences, maxlen=100, padding='post', truncating='post')
+    test_sequences = pad_sequences(test_sequences, maxlen=100, padding='post', truncating='post')
+
+    train_y = (train_y == 'spam').astype(int)
+    test_y = (test_y == 'spam').astype(int)
+
+    
+
 if __name__ == "__main__":
     main()
