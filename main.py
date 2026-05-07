@@ -119,6 +119,21 @@ def main():
     model.build(input_shape=(None, 100))
     model.summary()
 
+    
+    es = EarlyStopping(patience=3, monitor='val_accuracy', restore_best_weights=True)
+    lr = ReduceLROnPlateau(patience=2, monitor='val_loss', factor=0.5, verbose=0)
+
+    history = model.fit(
+        train_sequences, train_y,
+        validation_data=(test_sequences, test_y),
+        epochs=20,
+        batch_size=32,
+        callbacks=[lr, es]
+    )
+
+    test_loss, test_accuracy = model.evaluate(test_sequences, test_y)
+    print('Test Loss :',test_loss)
+    print('Test Accuracy :',test_accuracy)
 
 if __name__ == "__main__":
     main()
