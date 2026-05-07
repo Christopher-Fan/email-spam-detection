@@ -39,6 +39,15 @@ def remove_stopwords(text):
     
     return output
 
+def plot_word_cloud(data, classifier):
+    email_corpus = " ".join(data['text'])
+    wc = WordCloud(background_color='black', max_words=100, width=800, height=400).generate(email_corpus)
+    plt.figure(figsize=(7,7))
+    plt.imshow(wc, interpolation='bilinear')
+    plt.title(f'WordCloud for {classifier} Emails', fontsize=15)
+    plt.axis('off')
+    plt.show()
+
 def main():
     #preprocessing
     data = pd.read_csv('spam_ham_dataset.csv')
@@ -68,5 +77,8 @@ def main():
     balanced_data['text'] = balanced_data['text'].apply(lambda x: remove_stopwords(x))
     print(balanced_data.head())
 
+    #show flagged email wordcloud to highlight differences in word corpus
+    plot_word_cloud(balanced_data[balanced_data['label'] == 'ham'], classifier='Non-Spam')
+    plot_word_cloud(balanced_data[balanced_data['label'] == 'spam'], classifier='Spam')
 if __name__ == "__main__":
     main()
