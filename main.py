@@ -102,7 +102,23 @@ def main():
     train_y = (train_y == 'spam').astype(int)
     test_y = (test_y == 'spam').astype(int)
 
-    
+    #Sequential Model for output prediction of spam or not spam
+    model = tf.keras.models.Sequential([
+        tf.keras.layers.Embedding(input_dim=len(tokenizer.word_index) + 1, output_dim=32, input_length=100),
+        tf.keras.layers.LSTM(16),
+        tf.keras.layers.Dense(32, activation='relu'),
+        tf.keras.layers.Dense(1, activation='sigmoid') #output layer
+    ])
+
+    model.compile(
+        loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+        optimizer='adam',
+        metrics=['accuracy']
+    )
+
+    model.build(input_shape=(None, 100))
+    model.summary()
+
 
 if __name__ == "__main__":
     main()
