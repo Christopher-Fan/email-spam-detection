@@ -17,3 +17,13 @@ from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 import warnings
 warnings.filterwarnings('ignore')
+
+def main():
+    #preprocessing
+    data = pd.read_csv('spam_ham_dataset.csv')
+    print(data.head())
+
+    sns.countplot(x='label', data=data)
+    plt.show()
+if __name__ == "__main__":
+    main()
