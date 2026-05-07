@@ -46,6 +46,7 @@ def plot_word_cloud(data, classifier):
     plt.imshow(wc, interpolation='bilinear')
     plt.title(f'WordCloud for {classifier} Emails', fontsize=15)
     plt.axis('off')
+    plt.savefig(f'word_cloud_{classifier}.png')
     plt.show()
 
 def main():
@@ -55,6 +56,7 @@ def main():
 
     #show unbalanced data
     sns.countplot(x='label', data=data)
+    plt.savefig('unbalanced_data.png')
     plt.show()
 
     #splitting dataset into unflagged and flagged spam emails
@@ -69,6 +71,7 @@ def main():
     sns.countplot(x='label', data=balanced_data)
     plt.title("Balanced Distribution of Spam and Normal Emails")
     plt.xticks(ticks=[0, 1], labels=['Normal', 'Spam'])
+    plt.savefig('rebalanced_data.png')
     plt.show()
 
     #cleaning dataset
@@ -134,6 +137,15 @@ def main():
     test_loss, test_accuracy = model.evaluate(test_sequences, test_y)
     print('Test Loss :',test_loss)
     print('Test Accuracy :',test_accuracy)
+
+    plt.plot(history.history['accuracy'], label='Training Accuracy')
+    plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+    plt.title('Model Accuracy')
+    plt.ylabel('Accuracy')
+    plt.xlabel('Epoch')
+    plt.legend()
+    plt.savefig('training_accuracy.png')
+    plt.show()
 
 if __name__ == "__main__":
     main()
