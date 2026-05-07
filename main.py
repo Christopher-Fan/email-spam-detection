@@ -19,6 +19,26 @@ from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 import warnings
 warnings.filterwarnings('ignore')
 
+def remove_punctuation(text):
+    temp = str.maketrans('','', string.punctuation)
+    return text.translate(temp)
+
+def remove_stopwords(text):
+    stop_words = stopwords.words('english')
+    word_list = []
+
+    #check each word for if they're a stopword
+    for word in str(text).split():
+        word = word.lower()
+
+        #if not a stop word, add it to our saved words
+        if word not in stop_words:
+            word_list.append(word)
+
+    output = " ".join(word_list)
+    
+    return output
+
 def main():
     #preprocessing
     data = pd.read_csv('spam_ham_dataset.csv')
@@ -42,6 +62,11 @@ def main():
     plt.xticks(ticks=[0, 1], labels=['Normal', 'Spam'])
     plt.show()
 
+    #cleaning dataset
+    balanced_data['text'] = balanced_data['text'].str.replace('Subject', '')
+    balanced_data['text'] = balanced_data['text'].apply(lambda x: remove_punctuation(x))
+    balanced_data['text'] = balanced_data['text'].apply(lambda x: remove_stopwords(x))
+    print(balanced_data.head())
 
 if __name__ == "__main__":
     main()
